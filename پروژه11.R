@@ -1,0 +1,151 @@
+install.packages("rmarkdown")
+library(rmarkdown)
+#####################################
+
+# سوال 1
+install.packages("car")
+library(car)
+x = Salaries
+x
+my.id = 06+20
+set.seed(my.id)
+
+# نمومه گرفتن
+sample_x = Salaries[sample(nrow(Salaries),26),]
+sample_x
+
+# فراخوانی متغیر yrs.service
+yrs_service = sample_x$yrs.service
+yrs_service
+
+# شاخص های تمرکز
+mean(yrs_service)
+median(yrs_service)
+
+# شاخص های پراکندگی
+sd(yrs_service)   # انحراف معیار
+var(yrs_service)  # واریانس
+max(yrs_service)-min(yrs_service)   # دامنه تغییرات
+# چارک های اول ،دوم و سوم
+quantile(yrs_service,c(0.25,0.5,0.75))
+# تفسیر چارک سوم:یعنی 75درصد از افراد کمتر از 26.5 سال سابقه کار دارندو 25 درصد بیشتر از 26.5 سال سابقه کار دارند
+
+install.packages("e1071")
+library(e1071)
+# رسم نمودار هیستوگرام و محاسبه ی چولگی و کشیدگی
+hist(sample_x$yrs.service,main = " yrs.serviceهیستوگرام برای متغیر"
+     ,xlab = "سال خدمت"
+     ,ylab = "فراوانی"
+     ,col = "pink"
+     ,border = "lightblue"
+)
+chulegi = skewness(yrs_service)
+chulegi
+keshidegi = kurtosis(yrs_service)
+keshidegi
+
+##################################################
+# سوال 2
+install.packages("ggplot2")
+library(ggplot2)
+
+my.id = 06+20
+set.seed(my.id)
+
+# نمومه گرفتن
+n=my.id
+sample_x1 = Salaries[sample(nrow(Salaries),n,replace = TRUE),]
+sample_x1
+
+# rank رسم نمودار برای متغیر
+rank_x1 = sample_x1$rank
+rank_x1
+g = ggplot(data = sample_x1, aes(x = rank_x1, y = yrs.since.phd))
+g+geom_point(color = "red" , size = 3 , shape = 8)+labs(title = "Rank Data")
+
+# salary رسم نمودار برای متغیر  
+salary_x1 = sample_x1$salary
+salary_x1
+categories = sample(c("A","B"),26,replace = TRUE)
+gp=ggplot(data = sample_x, aes(x = categories, y = salary_x1, fill = categories))
+gp+geom_violin(trim = TRUE)+labs(title ="violin Plot of Salaries by Category",
+                                 x = "category", y = "salaries")+theme_minimal()
+
+##############################################################################
+
+# سوال 3
+my.id = 06+20
+set.seed(my.id)
+
+a = rnorm(100,50,10)
+a
+
+# گرد کردن
+b = round(a,0)
+
+# مضارب عدد6
+multi = c()    # برای ذخیره مضارب
+for (i in b){   # حلقه برای پیدا کردن مضارب 6
+  if(i%%6 == 0){
+    multi = c(multi,i)
+  }
+}
+print(multi)
+####################################################
+
+# سوال 4
+
+my.id = 06+20
+set.seed(my.id)
+
+g = function(){
+  x1 = Salaries$salary
+  n = length(x1)
+  f = n / sum(1/x1)
+  return(f)
+}
+g()
+######################################################
+
+# سوال 5
+
+my.id = 06+20
+set.seed(my.id)
+
+# به دست آوردن انتگرال یگانه 
+
+f = function(x){
+  1 + x^2
+}
+integrate(f,lower = 1/2, upper = 3)
+
+# pracma به دست آوردن انتگرال دوگانه با استفاده از پکیج 
+
+install.packages("pracma")
+library(pracma)
+
+g = function(x,y){
+  x+(y^2)-1
+}
+i = integral2(g , xmin = 3, xmax = 5, ymin = 0, ymax = 1)
+i
+###############################################################
+
+# سوال 6
+
+my.id = 06+20
+set.seed(my.id)
+
+A = matrix(c(1,6,9,2,1,5,4,3,3), nrow = 3, ncol = 3)
+A
+
+# محاسبه ی دترمینان
+det(A)
+
+# محاسبه ی وارون
+solve(A)
+
+# تعویض مقادیر روی قطر اصلی
+diag(A)
+diag(A) = c(0,0,0)
+A
